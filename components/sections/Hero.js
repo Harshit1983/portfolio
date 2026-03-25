@@ -13,12 +13,15 @@ const ROLES = [
     'CS Student @ LPU',
 ];
 
-const SOCIAL = [
-    { icon: Github, href: 'https://github.com/Harshit1983', label: 'GitHub', event: 'github_click' },
-    { icon: Linkedin, href: 'http://www.linkedin.com/in/harshit775/', label: 'LinkedIn', event: 'linkedin_click' },
-    { icon: SiLeetcode, href: 'https://leetcode.com', label: 'LeetCode', event: 'leetcode_click' },
-    { icon: SiHackerrank, href: 'https://www.hackerrank.com', label: 'HackerRank', event: 'hackerrank_click' },
-];
+// Build social links from settings (falls back to defaults if not configured)
+function buildSocial(settings) {
+    return [
+        { icon: Github,     href: settings?.githubUrl    || 'https://github.com/Harshit1983',           label: 'GitHub',     event: 'github_click' },
+        { icon: Linkedin,   href: settings?.linkedinUrl  || 'http://www.linkedin.com/in/harshit775/',   label: 'LinkedIn',   event: 'linkedin_click' },
+        { icon: SiLeetcode, href: settings?.leetcodeUrl  || 'https://leetcode.com',                    label: 'LeetCode',   event: 'leetcode_click' },
+        { icon: SiHackerrank, href: settings?.hackerrankUrl || 'https://www.hackerrank.com',           label: 'HackerRank', event: 'hackerrank_click' },
+    ];
+}
 
 /* ─── Typewriter ────────────────────────────────────────────────────────── */
 function TypewriterText({ words }) {
@@ -235,14 +238,22 @@ function OrbitalUniverse({ socialLinks, onSocialClick }) {
 
 /* ─── Hero ──────────────────────────────────────────────────────────────── */
 export default function Hero() {
-    const [cvUrl] = useState('/resume.pdf');
+    const [settings, setSettings] = useState(null);
 
     useEffect(() => {
+        // Track page view
         fetch('/api/analytics', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ event: 'page_view', page: '/' }),
         });
+        // Load profile settings (profilePhoto, cvUrl, social URLs, name, etc.)
+        fetch('/api/settings').then(r => r.ok ? r.json() : null).then(setSettings).catch(() => {});
     }, []);
+
+    const cvUrl = settings?.cvUrl || '/resume.pdf';
+    const profilePhoto = settings?.profilePhoto || null;
+    const displayName = settings?.name || 'Harshit Pandiyar';
+    const socialLinks = buildSocial(settings);
 
     const handleSocialClick = (event) => {
         fetch('/api/analytics', {
@@ -298,7 +309,7 @@ export default function Hero() {
 
                     {/* Name */}
                     <motion.h1 variants={item} className="heading-xl" style={{ marginBottom: '1rem', maxWidth: 900 }}>
-                        Hi, I&apos;m <span className="gradient-text">Harshit Pandiyar</span>
+                        Hi, I&apos;m <span className="gradient-text">{displayName}</span>
                     </motion.h1>
 
                     {/* Typewriter */}
@@ -308,8 +319,7 @@ export default function Hero() {
 
                     {/* Description */}
                     <motion.p variants={item} style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: 560, marginBottom: '2.5rem' }}>
-                        Computer Science student at LPU building machine learning models,
-                        solving algorithmic problems, and developing software systems.
+                        {settings?.bio || 'Computer Science student at LPU building machine learning models, solving algorithmic problems, and developing software systems.'}
                     </motion.p>
 
                     {/* CTA buttons */}
@@ -349,14 +359,29 @@ export default function Hero() {
                     </motion.div>
                 </motion.div>
 
-                {/* RIGHT — universe */}
+                {/* RIGHT — profile photo + universe */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1, delay: 0.45, ease: [0.4, 0, 0.2, 1] }}
-                    style={{ flex: '0 0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1.5rem' }}
                 >
-                    <OrbitalUniverse socialLinks={SOCIAL} onSocialClick={handleSocialClick} />
+                    {/* Profile photo (shown if uploaded in admin) */}
+                    {profilePhoto && (
+                        <div style={{
+                            width: 120, height: 120, borderRadius: '50%',
+                            background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-violet))',
+                            padding: 3, flexShrink: 0,
+                        }}>
+                            <div style={{
+                                width: '100%', height: '100%', borderRadius: '50%',
+                                overflow: 'hidden',
+                            }}>
+                                <img src={profilePhoto} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                        </div>
+                    )}
+                    <OrbitalUniverse socialLinks={socialLinks} onSocialClick={handleSocialClick} />
                 </motion.div>
             </div>
 

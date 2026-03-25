@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Star, ExternalLink, Github, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 const EMPTY = { title: '', description: '', techStack: '', githubUrl: '', liveUrl: '', imageUrl: '', featured: false, order: 0 };
 
@@ -96,7 +97,7 @@ export default function AdminProjectsPage() {
                                 <button onClick={close} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                {[['title', 'Title *'], ['description', 'Description'], ['techStack', 'Tech Stack (comma separated)'], ['githubUrl', 'GitHub URL'], ['liveUrl', 'Live URL'], ['imageUrl', 'Image URL'], ['order', 'Order']].map(([key, label]) => (
+                                {[['title', 'Title *'], ['description', 'Description'], ['techStack', 'Tech Stack (comma separated)'], ['githubUrl', 'GitHub URL'], ['liveUrl', 'Live URL'], ['order', 'Order']].map(([key, label]) => (
                                     <div key={key}>
                                         <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>{label}</label>
                                         {key === 'description' ? (
@@ -106,6 +107,12 @@ export default function AdminProjectsPage() {
                                         )}
                                     </div>
                                 ))}
+                                <ImageUpload
+                                    label="Project Image"
+                                    value={form.imageUrl || ''}
+                                    onChange={v => setForm(p => ({ ...p, imageUrl: v }))}
+                                    folder="portfolio/projects"
+                                />
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                                     <input type="checkbox" checked={form.featured || false} onChange={e => setForm(p => ({ ...p, featured: e.target.checked }))} />
                                     Featured project

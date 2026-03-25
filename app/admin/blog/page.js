@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 const EMPTY = { title: '', slug: '', content: '', coverImage: '', tags: '', published: false };
 
@@ -94,12 +95,18 @@ export default function AdminBlogPage() {
                                 <button onClick={() => setModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                {[['title', 'Title *'], ['slug', 'Slug (auto-generated if empty)'], ['coverImage', 'Cover Image URL'], ['tags', 'Tags (comma separated)']].map(([key, label]) => (
+                                {[['title', 'Title *'], ['slug', 'Slug (auto-generated if empty)'], ['tags', 'Tags (comma separated)']].map(([key, label]) => (
                                     <div key={key}>
                                         <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>{label}</label>
                                         <input value={form[key] || ''} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} className="form-input" />
                                     </div>
                                 ))}
+                                <ImageUpload
+                                    label="Cover Image"
+                                    value={form.coverImage || ''}
+                                    onChange={v => setForm(p => ({ ...p, coverImage: v }))}
+                                    folder="portfolio/blog"
+                                />
                                 <div>
                                     <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>Content * (Markdown)</label>
                                     <textarea value={form.content || ''} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} rows={8} className="form-input" style={{ resize: 'vertical', fontFamily: 'monospace', fontSize: '0.85rem' }} />

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Loader2, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 const EMPTY = { title: '', organization: '', orgLogo: '', date: '', description: '', verifyUrl: '', imageUrl: '' };
 
@@ -30,7 +31,7 @@ export default function AdminCertificatesPage() {
         if ((await fetch(`/api/certificates/${id}`, { method: 'DELETE' })).ok) { toast.success('Deleted!'); load(); }
     };
 
-    const fields = [['title', 'Title *'], ['organization', 'Organization *'], ['orgLogo', 'Org Logo URL'], ['date', 'Date (e.g. Jan 2024)'], ['description', 'Description'], ['verifyUrl', 'Verify URL'], ['imageUrl', 'Certificate Image URL']];
+    const fields = [['title', 'Title *'], ['organization', 'Organization *'], ['date', 'Date (e.g. Jan 2024)'], ['description', 'Description'], ['verifyUrl', 'Verify URL']];
 
     return (
         <div style={{ padding: '2rem 2.5rem' }}>
@@ -79,6 +80,18 @@ export default function AdminCertificatesPage() {
                                         {key === 'description' ? <textarea value={form[key] || ''} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} rows={3} className="form-input" style={{ resize: 'vertical' }} /> : <input value={form[key] || ''} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))} className="form-input" />}
                                     </div>
                                 ))}
+                                <ImageUpload
+                                    label="Org Logo"
+                                    value={form.orgLogo || ''}
+                                    onChange={v => setForm(p => ({ ...p, orgLogo: v }))}
+                                    folder="portfolio/logos"
+                                />
+                                <ImageUpload
+                                    label="Certificate Image"
+                                    value={form.imageUrl || ''}
+                                    onChange={v => setForm(p => ({ ...p, imageUrl: v }))}
+                                    folder="portfolio/certificates"
+                                />
                             </div>
                             <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
                                 <button onClick={() => setModal(null)} style={{ flex: 1, padding: '0.7rem', borderRadius: '10px', background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 600 }}>Cancel</button>
