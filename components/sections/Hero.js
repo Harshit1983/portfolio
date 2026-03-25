@@ -359,28 +359,13 @@ export default function Hero() {
                     </motion.div>
                 </motion.div>
 
-                {/* RIGHT — profile photo + universe */}
+                {/* RIGHT — universe */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1, delay: 0.45, ease: [0.4, 0, 0.2, 1] }}
-                    style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1.5rem' }}
+                    style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    {/* Profile photo (shown if uploaded in admin) */}
-                    {profilePhoto && (
-                        <div style={{
-                            width: 120, height: 120, borderRadius: '50%',
-                            background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-violet))',
-                            padding: 3, flexShrink: 0,
-                        }}>
-                            <div style={{
-                                width: '100%', height: '100%', borderRadius: '50%',
-                                overflow: 'hidden',
-                            }}>
-                                <img src={profilePhoto} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            </div>
-                        </div>
-                    )}
                     <OrbitalUniverse socialLinks={socialLinks} onSocialClick={handleSocialClick} />
                 </motion.div>
             </div>
