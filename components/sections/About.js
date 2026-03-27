@@ -15,7 +15,7 @@ export default function About() {
 
     const stats = [
         { icon: Code2, label: 'Projects Built', value: '10+' },
-        { icon: Trophy, label: 'Certificates', value: '4+' },
+        { icon: Trophy, label: 'Certificates', value: '15+' },
         { icon: BookOpen, label: 'LeetCode Problems', value: '100+' },
     ];
 
