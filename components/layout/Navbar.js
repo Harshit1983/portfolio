@@ -78,7 +78,7 @@ export default function Navbar() {
                                 boxShadow: '0 4px 16px var(--accent-glow-violet)',
                             }}
                         >
-                            HR
+                            HP
                         </motion.div>
                     </Link>
 
